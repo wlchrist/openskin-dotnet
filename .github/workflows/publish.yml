@@ -18,10 +18,22 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - run: dotnet pack src/OpenSkin.Client/OpenSkin.Client.csproj --configuration Release --output artifacts
+      - name: Check registry
+        id: registry
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if curl -fsS "https://api.nuget.org/v3-flatcontainer/openskin.client/${version}/openskin.client.${version}.nupkg" -o /dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Sign in to NuGet
+        if: steps.registry.outputs.exists != 'true'
         id: nuget
         uses: NuGet/login@v1
         with:
           user: ${{ secrets.NUGET_USER }}
       - name: Publish package
+        if: steps.registry.outputs.exists != 'true'
         run: dotnet nuget push 'artifacts/*.nupkg' --api-key '${{ steps.nuget.outputs.NUGET_API_KEY }}' --source https://api.nuget.org/v3/index.json --skip-duplicate
