@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo> <!-- setting GenerateAssemblyInfo to false causes this bug https://github.com/dotnet/project-system/issues/3934 -->
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>OpenSkin.Client</AssemblyName>
+    <PackageId>OpenSkin.Client</PackageId>
+    <OutputType>Library</OutputType>
+    <Authors>OpenSkin</Authors>
+    <Company>OpenSkin</Company>
+    <AssemblyTitle>OpenSkin Platform SDK</AssemblyTitle>
+    <Description>Typed .NET client for the OpenSkin Platform API.</Description>
+    <Copyright>Copyright OpenSkin</Copyright>
+    <PackageTags>OpenSkin;CS2;API;SDK</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://platform.openskin.dev</PackageProjectUrl>
+    <RootNamespace>OpenSkin.Client</RootNamespace>
+    <Version>0.1.0</Version>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\OpenSkin.Client.xml</DocumentationFile>
+    <RepositoryUrl>https://github.com/wlchrist/openskin-dotnet.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>enable</Nullable>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <PackageReference Include="Microsoft.Extensions.Http" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.20" />
+    <PackageReference Include="Microsoft.Net.Http.Headers" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.17" />
+  </ItemGroup>
+
+</Project>
