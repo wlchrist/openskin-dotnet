@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   nuget:
@@ -17,4 +18,10 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - run: dotnet pack src/OpenSkin.Client/OpenSkin.Client.csproj --configuration Release --output artifacts
-      - run: dotnet nuget push 'artifacts/*.nupkg' --api-key '${{ secrets.NUGET_API_KEY }}' --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Sign in to NuGet
+        id: nuget
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+      - name: Publish package
+        run: dotnet nuget push 'artifacts/*.nupkg' --api-key '${{ steps.nuget.outputs.NUGET_API_KEY }}' --source https://api.nuget.org/v3/index.json --skip-duplicate
