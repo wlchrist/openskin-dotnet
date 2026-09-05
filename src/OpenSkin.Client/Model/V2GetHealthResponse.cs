@@ -172,9 +172,14 @@ namespace OpenSkin.Client.Model
         public enum VarEnvironmentEnum
         {
             /// <summary>
+            /// Enum Production for value: production
+            /// </summary>
+            Production = 1,
+
+            /// <summary>
             /// Enum V2Test for value: v2-test
             /// </summary>
-            V2Test = 1
+            V2Test = 2
         }
 
         /// <summary>
@@ -185,6 +190,9 @@ namespace OpenSkin.Client.Model
         /// <exception cref="NotImplementedException"></exception>
         public static VarEnvironmentEnum VarEnvironmentEnumFromString(string value)
         {
+            if (value.Equals("production"))
+                return VarEnvironmentEnum.Production;
+
             if (value.Equals("v2-test"))
                 return VarEnvironmentEnum.V2Test;
 
@@ -198,6 +206,9 @@ namespace OpenSkin.Client.Model
         /// <returns></returns>
         public static VarEnvironmentEnum? VarEnvironmentEnumFromStringOrDefault(string value)
         {
+            if (value.Equals("production"))
+                return VarEnvironmentEnum.Production;
+
             if (value.Equals("v2-test"))
                 return VarEnvironmentEnum.V2Test;
 
@@ -212,6 +223,9 @@ namespace OpenSkin.Client.Model
         /// <exception cref="NotImplementedException"></exception>
         public static string VarEnvironmentEnumToJsonValue(VarEnvironmentEnum value)
         {
+            if (value == VarEnvironmentEnum.Production)
+                return "production";
+
             if (value == VarEnvironmentEnum.V2Test)
                 return "v2-test";
 
