@@ -124,6 +124,7 @@ namespace OpenSkin.Client.Client
             _jsonOptions.Converters.Add(new V2GetSceneResponseJsonConverter());
             _jsonOptions.Converters.Add(new V2GetSteamAccountHealthResponseJsonConverter());
             _jsonOptions.Converters.Add(new V2GetSteamFriendsResponseJsonConverter());
+            _jsonOptions.Converters.Add(new V2GetSteamPartnerInventoryResponseJsonConverter());
             _jsonOptions.Converters.Add(new V2GetSteamProfileBatchResponseJsonConverter());
             _jsonOptions.Converters.Add(new V2GetSteamProfileResponseJsonConverter());
             _jsonOptions.Converters.Add(new V2GetSteamTradeEligibilityResponseJsonConverter());
@@ -148,8 +149,11 @@ namespace OpenSkin.Client.Client
             _jsonOptions.Converters.Add(new V2InventoryBatchResponseJsonConverter());
             _jsonOptions.Converters.Add(new V2InventoryBatchResultJsonConverter());
             _jsonOptions.Converters.Add(new V2InventoryCatalogItemJsonConverter());
+            _jsonOptions.Converters.Add(new V2InventoryFetchRequestJsonConverter());
+            _jsonOptions.Converters.Add(new V2InventoryFreshnessJsonConverter());
             _jsonOptions.Converters.Add(new V2InventoryHistoryEntryJsonConverter());
             _jsonOptions.Converters.Add(new V2InventoryHistoryPageJsonConverter());
+            _jsonOptions.Converters.Add(new V2InventoryRequestProxyJsonConverter());
             _jsonOptions.Converters.Add(new V2InventorySnapshotJsonConverter());
             _jsonOptions.Converters.Add(new V2InventorySnapshotAssetsInnerJsonConverter());
             _jsonOptions.Converters.Add(new V2InventorySnapshotCacheJsonConverter());
@@ -256,6 +260,8 @@ namespace OpenSkin.Client.Client
             _jsonOptions.Converters.Add(new V2SteamIDFormatsJsonConverter());
             _jsonOptions.Converters.Add(new V2SteamIdentityResolutionJsonConverter());
             _jsonOptions.Converters.Add(new V2SteamLoginRequestJsonConverter());
+            _jsonOptions.Converters.Add(new V2SteamPartnerInventoryObservationJsonConverter());
+            _jsonOptions.Converters.Add(new V2SteamPartnerInventoryRequestJsonConverter());
             _jsonOptions.Converters.Add(new V2SteamProfileJsonConverter());
             _jsonOptions.Converters.Add(new V2SteamTradeBudgetUsageJsonConverter());
             _jsonOptions.Converters.Add(new V2SteamTradeEligibilityJsonConverter());

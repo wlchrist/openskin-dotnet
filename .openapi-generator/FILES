@@ -119,6 +119,7 @@ src/OpenSkin.Client/Model/V2GetPriceHistoryResponse.cs
 src/OpenSkin.Client/Model/V2GetSceneResponse.cs
 src/OpenSkin.Client/Model/V2GetSteamAccountHealthResponse.cs
 src/OpenSkin.Client/Model/V2GetSteamFriendsResponse.cs
+src/OpenSkin.Client/Model/V2GetSteamPartnerInventoryResponse.cs
 src/OpenSkin.Client/Model/V2GetSteamProfileBatchResponse.cs
 src/OpenSkin.Client/Model/V2GetSteamProfileResponse.cs
 src/OpenSkin.Client/Model/V2GetSteamTradeEligibilityResponse.cs
@@ -143,8 +144,11 @@ src/OpenSkin.Client/Model/V2InventoryBatchRequest.cs
 src/OpenSkin.Client/Model/V2InventoryBatchResponse.cs
 src/OpenSkin.Client/Model/V2InventoryBatchResult.cs
 src/OpenSkin.Client/Model/V2InventoryCatalogItem.cs
+src/OpenSkin.Client/Model/V2InventoryFetchRequest.cs
+src/OpenSkin.Client/Model/V2InventoryFreshness.cs
 src/OpenSkin.Client/Model/V2InventoryHistoryEntry.cs
 src/OpenSkin.Client/Model/V2InventoryHistoryPage.cs
+src/OpenSkin.Client/Model/V2InventoryRequestProxy.cs
 src/OpenSkin.Client/Model/V2InventorySnapshot.cs
 src/OpenSkin.Client/Model/V2InventorySnapshotAssetsInner.cs
 src/OpenSkin.Client/Model/V2InventorySnapshotCache.cs
@@ -251,6 +255,8 @@ src/OpenSkin.Client/Model/V2SteamFriendList.cs
 src/OpenSkin.Client/Model/V2SteamIDFormats.cs
 src/OpenSkin.Client/Model/V2SteamIdentityResolution.cs
 src/OpenSkin.Client/Model/V2SteamLoginRequest.cs
+src/OpenSkin.Client/Model/V2SteamPartnerInventoryObservation.cs
+src/OpenSkin.Client/Model/V2SteamPartnerInventoryRequest.cs
 src/OpenSkin.Client/Model/V2SteamProfile.cs
 src/OpenSkin.Client/Model/V2SteamTradeBudgetUsage.cs
 src/OpenSkin.Client/Model/V2SteamTradeEligibility.cs
