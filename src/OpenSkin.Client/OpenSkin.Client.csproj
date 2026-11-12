@@ -15,7 +15,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://platform.openskin.dev</PackageProjectUrl>
     <RootNamespace>OpenSkin.Client</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\OpenSkin.Client.xml</DocumentationFile>
     <RepositoryUrl>https://github.com/wlchrist/openskin-dotnet.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

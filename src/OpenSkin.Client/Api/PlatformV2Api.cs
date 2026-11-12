@@ -111,6 +111,31 @@ namespace OpenSkin.Client.Api
         Task<IDecodeV2InspectApiResponse?> DecodeV2InspectOrDefaultAsync(V2InspectDecodeRequest v2InspectDecodeRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Fetch a CS2 inventory through a request-scoped proxy
+        /// </summary>
+        /// <remarks>
+        /// Reads an acceptable shared public snapshot when available; otherwise fetches the public Steam inventory only through the HTTP(S) proxy supplied in this request. Proxy configuration and credentials remain request-scoped, and proxy failures return a sanitized upstream error with platform and direct fallback disabled.
+        /// </remarks>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2InventoryWithRequestProxyApiResponse"/>&gt;</returns>
+        Task<IFetchV2InventoryWithRequestProxyApiResponse> FetchV2InventoryWithRequestProxyAsync(string steamId, V2InventoryFetchRequest v2InventoryFetchRequest, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Fetch a CS2 inventory through a request-scoped proxy
+        /// </summary>
+        /// <remarks>
+        /// Reads an acceptable shared public snapshot when available; otherwise fetches the public Steam inventory only through the HTTP(S) proxy supplied in this request. Proxy configuration and credentials remain request-scoped, and proxy failures return a sanitized upstream error with platform and direct fallback disabled.
+        /// </remarks>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2InventoryWithRequestProxyApiResponse"/>?&gt;</returns>
+        Task<IFetchV2InventoryWithRequestProxyApiResponse?> FetchV2InventoryWithRequestProxyOrDefaultAsync(string steamId, V2InventoryFetchRequest v2InventoryFetchRequest, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Read the latest catalog release
         /// </summary>
         /// <remarks>
@@ -317,30 +342,36 @@ namespace OpenSkin.Client.Api
         /// Read a CS2 inventory
         /// </summary>
         /// <remarks>
-        /// Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available, including wear, paint seed, applied stickers, charms or keychains with pattern and offsets, StatTrak, and name tag. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
+        /// Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available. Ordinary reads return the first saved public observation at any age and avoid a Steam request. An explicit max_age_seconds may fetch a newer observation while retaining the saved copy. A successful force_refresh request replaces it; a private response invalidates it. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="steamId"></param>
+        /// <param name="maxAgeSeconds">Maximum observation age before attempting Steam. If omitted, use the saved observation at any age. Cannot accompany force_refresh&#x3D;true. (optional)</param>
+        /// <param name="forceRefresh">Attempt Steam even when a cached observation qualifies; a successful public response replaces the saved durable observation. Default false. (optional)</param>
+        /// <param name="staleIfErrorSeconds">Maximum observation age allowed only after a Steam failure or rate limit; default 1800. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetV2InventoryApiResponse"/>&gt;</returns>
-        Task<IGetV2InventoryApiResponse> GetV2InventoryAsync(string steamId, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetV2InventoryApiResponse> GetV2InventoryAsync(string steamId, Option<int> maxAgeSeconds = default, Option<bool> forceRefresh = default, Option<int> staleIfErrorSeconds = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Read a CS2 inventory
         /// </summary>
         /// <remarks>
-        /// Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available, including wear, paint seed, applied stickers, charms or keychains with pattern and offsets, StatTrak, and name tag. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
+        /// Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available. Ordinary reads return the first saved public observation at any age and avoid a Steam request. An explicit max_age_seconds may fetch a newer observation while retaining the saved copy. A successful force_refresh request replaces it; a private response invalidates it. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
         /// </remarks>
         /// <param name="steamId"></param>
+        /// <param name="maxAgeSeconds">Maximum observation age before attempting Steam. If omitted, use the saved observation at any age. Cannot accompany force_refresh&#x3D;true. (optional)</param>
+        /// <param name="forceRefresh">Attempt Steam even when a cached observation qualifies; a successful public response replaces the saved durable observation. Default false. (optional)</param>
+        /// <param name="staleIfErrorSeconds">Maximum observation age allowed only after a Steam failure or rate limit; default 1800. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetV2InventoryApiResponse"/>?&gt;</returns>
-        Task<IGetV2InventoryApiResponse?> GetV2InventoryOrDefaultAsync(string steamId, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetV2InventoryApiResponse?> GetV2InventoryOrDefaultAsync(string steamId, Option<int> maxAgeSeconds = default, Option<bool> forceRefresh = default, Option<int> staleIfErrorSeconds = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Resolve up to 20 CS2 inventories
         /// </summary>
         /// <remarks>
-        /// Results preserve input order and report failures per SteamID.
+        /// Results preserve input order and report failures per SteamID. An optional freshness object applies one policy to the whole batch; omitted fields use scalar defaults.
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="v2InventoryBatchRequest"></param>
@@ -352,7 +383,7 @@ namespace OpenSkin.Client.Api
         /// Resolve up to 20 CS2 inventories
         /// </summary>
         /// <remarks>
-        /// Results preserve input order and report failures per SteamID.
+        /// Results preserve input order and report failures per SteamID. An optional freshness object applies one policy to the whole batch; omitted fields use scalar defaults.
         /// </remarks>
         /// <param name="v2InventoryBatchRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
@@ -825,6 +856,42 @@ namespace OpenSkin.Client.Api
     }
 
     /// <summary>
+    /// The <see cref="IFetchV2InventoryWithRequestProxyApiResponse"/>
+    /// </summary>
+    public interface IFetchV2InventoryWithRequestProxyApiResponse : OpenSkin.Client.Client.IApiResponse, IOk<OpenSkin.Client.Model.V2GetInventoryResponse?>, IBadRequest<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IBadGateway<OpenSkin.Client.Model.V2PlatformErrorResponse?>
+    {
+        /// <summary>
+        /// Returns true if the response is 200 Ok
+        /// </summary>
+        /// <returns></returns>
+        bool IsOk { get; }
+
+        /// <summary>
+        /// Returns true if the response is 400 BadRequest
+        /// </summary>
+        /// <returns></returns>
+        bool IsBadRequest { get; }
+
+        /// <summary>
+        /// Returns true if the response is 401 Unauthorized
+        /// </summary>
+        /// <returns></returns>
+        bool IsUnauthorized { get; }
+
+        /// <summary>
+        /// Returns true if the response is 403 Forbidden
+        /// </summary>
+        /// <returns></returns>
+        bool IsForbidden { get; }
+
+        /// <summary>
+        /// Returns true if the response is 502 BadGateway
+        /// </summary>
+        /// <returns></returns>
+        bool IsBadGateway { get; }
+    }
+
+    /// <summary>
     /// The <see cref="IGetLatestV2CatalogReleaseApiResponse"/>
     /// </summary>
     public interface IGetLatestV2CatalogReleaseApiResponse : OpenSkin.Client.Client.IApiResponse, IOk<OpenSkin.Client.Model.V2GetLatestCatalogReleaseResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, INotFound<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IServiceUnavailable<OpenSkin.Client.Model.V2PlatformErrorResponse?>
@@ -1121,13 +1188,19 @@ namespace OpenSkin.Client.Api
     /// <summary>
     /// The <see cref="IGetV2InventoryApiResponse"/>
     /// </summary>
-    public interface IGetV2InventoryApiResponse : OpenSkin.Client.Client.IApiResponse, IOk<OpenSkin.Client.Model.V2GetInventoryResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>
+    public interface IGetV2InventoryApiResponse : OpenSkin.Client.Client.IApiResponse, IOk<OpenSkin.Client.Model.V2GetInventoryResponse?>, IBadRequest<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>
     {
         /// <summary>
         /// Returns true if the response is 200 Ok
         /// </summary>
         /// <returns></returns>
         bool IsOk { get; }
+
+        /// <summary>
+        /// Returns true if the response is 400 BadRequest
+        /// </summary>
+        /// <returns></returns>
+        bool IsBadRequest { get; }
 
         /// <summary>
         /// Returns true if the response is 401 Unauthorized
@@ -1145,13 +1218,19 @@ namespace OpenSkin.Client.Api
     /// <summary>
     /// The <see cref="IGetV2InventoryBatchApiResponse"/>
     /// </summary>
-    public interface IGetV2InventoryBatchApiResponse : OpenSkin.Client.Client.IApiResponse, IOk<OpenSkin.Client.Model.V2InventoryBatchResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>
+    public interface IGetV2InventoryBatchApiResponse : OpenSkin.Client.Client.IApiResponse, IOk<OpenSkin.Client.Model.V2InventoryBatchResponse?>, IBadRequest<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>
     {
         /// <summary>
         /// Returns true if the response is 200 Ok
         /// </summary>
         /// <returns></returns>
         bool IsOk { get; }
+
+        /// <summary>
+        /// Returns true if the response is 400 BadRequest
+        /// </summary>
+        /// <returns></returns>
+        bool IsBadRequest { get; }
 
         /// <summary>
         /// Returns true if the response is 401 Unauthorized
@@ -1625,6 +1704,26 @@ namespace OpenSkin.Client.Api
         internal void ExecuteOnErrorDecodeV2Inspect(Exception exception)
         {
             OnErrorDecodeV2Inspect?.Invoke(this, new ExceptionEventArgs(exception));
+        }
+
+        /// <summary>
+        /// The event raised after the server response
+        /// </summary>
+        public event EventHandler<ApiResponseEventArgs>? OnFetchV2InventoryWithRequestProxy;
+
+        /// <summary>
+        /// The event raised after an error querying the server
+        /// </summary>
+        public event EventHandler<ExceptionEventArgs>? OnErrorFetchV2InventoryWithRequestProxy;
+
+        internal void ExecuteOnFetchV2InventoryWithRequestProxy(PlatformV2Api.FetchV2InventoryWithRequestProxyApiResponse apiResponse)
+        {
+            OnFetchV2InventoryWithRequestProxy?.Invoke(this, new ApiResponseEventArgs(apiResponse));
+        }
+
+        internal void ExecuteOnErrorFetchV2InventoryWithRequestProxy(Exception exception)
+        {
+            OnErrorFetchV2InventoryWithRequestProxy?.Invoke(this, new ExceptionEventArgs(exception));
         }
 
         /// <summary>
@@ -3695,6 +3794,491 @@ namespace OpenSkin.Client.Api
                 } catch (Exception e)
                 {
                     OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)403);
+                }
+
+                return result != null;
+            }
+
+            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
+            {
+                bool suppressDefaultLog = false;
+                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
+                if (!suppressDefaultLog)
+                    Logger.LogError(RestLogEvents.ApiDeserializationFailed, exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
+            }
+
+            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
+        }
+
+        partial void FormatFetchV2InventoryWithRequestProxy(ref string steamId, V2InventoryFetchRequest v2InventoryFetchRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        /// <returns></returns>
+        private void ValidateFetchV2InventoryWithRequestProxy(string steamId, V2InventoryFetchRequest v2InventoryFetchRequest)
+        {
+            if (steamId == null)
+                throw new ArgumentNullException(nameof(steamId));
+
+            if (v2InventoryFetchRequest == null)
+                throw new ArgumentNullException(nameof(v2InventoryFetchRequest));
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        private void AfterFetchV2InventoryWithRequestProxyDefaultImplementation(IFetchV2InventoryWithRequestProxyApiResponse apiResponseLocalVar, string steamId, V2InventoryFetchRequest v2InventoryFetchRequest)
+        {
+            bool suppressDefaultLog = false;
+            AfterFetchV2InventoryWithRequestProxy(ref suppressDefaultLog, apiResponseLocalVar, steamId, v2InventoryFetchRequest);
+            if (!suppressDefaultLog)
+                Logger.LogInformation(RestLogEvents.ApiRequestCompleted, "{0,-9} | {1} | {2}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="suppressDefaultLog"></param>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        partial void AfterFetchV2InventoryWithRequestProxy(ref bool suppressDefaultLog, IFetchV2InventoryWithRequestProxyApiResponse apiResponseLocalVar, string steamId, V2InventoryFetchRequest v2InventoryFetchRequest);
+
+        /// <summary>
+        /// Logs exceptions that occur while retrieving the server response
+        /// </summary>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        private void OnErrorFetchV2InventoryWithRequestProxyDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string steamId, V2InventoryFetchRequest v2InventoryFetchRequest)
+        {
+            bool suppressDefaultLogLocalVar = false;
+            OnErrorFetchV2InventoryWithRequestProxy(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, steamId, v2InventoryFetchRequest);
+            if (!suppressDefaultLogLocalVar)
+                Logger.LogError(RestLogEvents.ApiRequestFailed, exceptionLocalVar, "An error occurred while sending the request to the server.");
+        }
+
+        /// <summary>
+        /// A partial method that gives developers a way to provide customized exception handling
+        /// </summary>
+        /// <param name="suppressDefaultLogLocalVar"></param>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        partial void OnErrorFetchV2InventoryWithRequestProxy(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string steamId, V2InventoryFetchRequest v2InventoryFetchRequest);
+
+        /// <summary>
+        /// Fetch a CS2 inventory through a request-scoped proxy Reads an acceptable shared public snapshot when available; otherwise fetches the public Steam inventory only through the HTTP(S) proxy supplied in this request. Proxy configuration and credentials remain request-scoped, and proxy failures return a sanitized upstream error with platform and direct fallback disabled.
+        /// </summary>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2InventoryWithRequestProxyApiResponse"/>&gt;</returns>
+        public async Task<IFetchV2InventoryWithRequestProxyApiResponse?> FetchV2InventoryWithRequestProxyOrDefaultAsync(string steamId, V2InventoryFetchRequest v2InventoryFetchRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await FetchV2InventoryWithRequestProxyAsync(steamId, v2InventoryFetchRequest, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fetch a CS2 inventory through a request-scoped proxy Reads an acceptable shared public snapshot when available; otherwise fetches the public Steam inventory only through the HTTP(S) proxy supplied in this request. Proxy configuration and credentials remain request-scoped, and proxy failures return a sanitized upstream error with platform and direct fallback disabled.
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="steamId"></param>
+        /// <param name="v2InventoryFetchRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2InventoryWithRequestProxyApiResponse"/>&gt;</returns>
+        public async Task<IFetchV2InventoryWithRequestProxyApiResponse> FetchV2InventoryWithRequestProxyAsync(string steamId, V2InventoryFetchRequest v2InventoryFetchRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            UriBuilder uriBuilderLocalVar = new UriBuilder();
+
+            try
+            {
+                ValidateFetchV2InventoryWithRequestProxy(steamId, v2InventoryFetchRequest);
+
+                FormatFetchV2InventoryWithRequestProxy(ref steamId, v2InventoryFetchRequest);
+
+                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
+                {
+                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
+                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
+                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
+                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
+                        ? "/v2/inventories/{steam_id}/fetch"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/inventories/{steam_id}/fetch");
+                    uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bsteam_id%7D", Uri.EscapeDataString(steamId.ToString()));
+
+                    httpRequestMessageLocalVar.Content = (v2InventoryFetchRequest as object) is OpenSkin.Client.Client.FileParameter fileParameterLocalVar
+                        ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2InventoryFetchRequest, _jsonSerializerOptions));
+
+                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
+                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("X-API-Key", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
+                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
+
+                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
+
+                    string[] contentTypes = new string[] {
+                        "application/json"
+                    };
+
+                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
+
+                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
+                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
+
+                    string[] acceptLocalVars = new string[] {
+                        "application/json"
+                    };
+
+                    IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaderValuesLocalVar = ClientUtils.SelectHeaderAcceptArray(acceptLocalVars);
+
+                    foreach (var acceptLocalVar in acceptHeaderValuesLocalVar)
+                        httpRequestMessageLocalVar.Headers.Accept.Add(acceptLocalVar);
+
+                    httpRequestMessageLocalVar.Method = HttpMethod.Post;
+
+                    DateTime requestedAtLocalVar = DateTime.UtcNow;
+
+                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
+                    {
+                        FetchV2InventoryWithRequestProxyApiResponse apiResponseLocalVar;
+
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(Logger, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/v2/inventories/{steam_id}/fetch", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
+
+                        AfterFetchV2InventoryWithRequestProxyDefaultImplementation(apiResponseLocalVar, steamId, v2InventoryFetchRequest);
+
+                        Events.ExecuteOnFetchV2InventoryWithRequestProxy(apiResponseLocalVar);
+
+                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
+                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
+                                tokenBaseLocalVar.BeginRateLimit();
+
+                        return apiResponseLocalVar;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                OnErrorFetchV2InventoryWithRequestProxyDefaultImplementation(e, "/v2/inventories/{steam_id}/fetch", uriBuilderLocalVar.Path, steamId, v2InventoryFetchRequest);
+                Events.ExecuteOnErrorFetchV2InventoryWithRequestProxy(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="FetchV2InventoryWithRequestProxyApiResponse"/>
+        /// </summary>
+        public partial class FetchV2InventoryWithRequestProxyApiResponse : OpenSkin.Client.Client.ApiResponse, IFetchV2InventoryWithRequestProxyApiResponse
+        {
+            /// <summary>
+            /// The logger
+            /// </summary>
+            public ILogger<PlatformV2Api> Logger { get; }
+
+            /// <summary>
+            /// The <see cref="FetchV2InventoryWithRequestProxyApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="rawContent"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public FetchV2InventoryWithRequestProxyApiResponse(ILogger<PlatformV2Api> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="FetchV2InventoryWithRequestProxyApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public FetchV2InventoryWithRequestProxyApiResponse(ILogger<PlatformV2Api> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public bool IsOk => 200 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2GetInventoryResponse? Ok()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2GetInventoryResponse? result = null;
+                OnOk(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultOk();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2GetInventoryResponse? DefaultOk()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsOk
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2GetInventoryResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnOk(ref bool suppressDefault, ref OpenSkin.Client.Model.V2GetInventoryResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryOk([NotNullWhen(true)]out OpenSkin.Client.Model.V2GetInventoryResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Ok();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)200);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? BadRequest()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnBadRequest(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultBadRequest();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultBadRequest()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsBadRequest
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnBadRequest(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryBadRequest([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = BadRequest();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)400);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public bool IsUnauthorized => 401 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? Unauthorized()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnUnauthorized(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultUnauthorized();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultUnauthorized()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsUnauthorized
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnUnauthorized(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryUnauthorized([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Unauthorized();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)401);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public bool IsForbidden => 403 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? Forbidden()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnForbidden(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultForbidden();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultForbidden()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsForbidden
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnForbidden(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryForbidden([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Forbidden();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)403);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 502 BadGateway
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadGateway => 502 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 502 BadGateway
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? BadGateway()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnBadGateway(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultBadGateway();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultBadGateway()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsBadGateway
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnBadGateway(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 502 BadGateway and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryBadGateway([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = BadGateway();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)502);
                 }
 
                 return result != null;
@@ -7517,7 +8101,7 @@ namespace OpenSkin.Client.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatGetV2Inventory(ref string steamId);
+        partial void FormatGetV2Inventory(ref string steamId, ref Option<int> maxAgeSeconds, ref Option<bool> forceRefresh, ref Option<int> staleIfErrorSeconds);
 
         /// <summary>
         /// Validates the request parameters
@@ -7535,10 +8119,13 @@ namespace OpenSkin.Client.Api
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="steamId"></param>
-        private void AfterGetV2InventoryDefaultImplementation(IGetV2InventoryApiResponse apiResponseLocalVar, string steamId)
+        /// <param name="maxAgeSeconds"></param>
+        /// <param name="forceRefresh"></param>
+        /// <param name="staleIfErrorSeconds"></param>
+        private void AfterGetV2InventoryDefaultImplementation(IGetV2InventoryApiResponse apiResponseLocalVar, string steamId, Option<int> maxAgeSeconds, Option<bool> forceRefresh, Option<int> staleIfErrorSeconds)
         {
             bool suppressDefaultLog = false;
-            AfterGetV2Inventory(ref suppressDefaultLog, apiResponseLocalVar, steamId);
+            AfterGetV2Inventory(ref suppressDefaultLog, apiResponseLocalVar, steamId, maxAgeSeconds, forceRefresh, staleIfErrorSeconds);
             if (!suppressDefaultLog)
                 Logger.LogInformation(RestLogEvents.ApiRequestCompleted, "{0,-9} | {1} | {2}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
         }
@@ -7549,7 +8136,10 @@ namespace OpenSkin.Client.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="steamId"></param>
-        partial void AfterGetV2Inventory(ref bool suppressDefaultLog, IGetV2InventoryApiResponse apiResponseLocalVar, string steamId);
+        /// <param name="maxAgeSeconds"></param>
+        /// <param name="forceRefresh"></param>
+        /// <param name="staleIfErrorSeconds"></param>
+        partial void AfterGetV2Inventory(ref bool suppressDefaultLog, IGetV2InventoryApiResponse apiResponseLocalVar, string steamId, Option<int> maxAgeSeconds, Option<bool> forceRefresh, Option<int> staleIfErrorSeconds);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -7558,10 +8148,13 @@ namespace OpenSkin.Client.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="steamId"></param>
-        private void OnErrorGetV2InventoryDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string steamId)
+        /// <param name="maxAgeSeconds"></param>
+        /// <param name="forceRefresh"></param>
+        /// <param name="staleIfErrorSeconds"></param>
+        private void OnErrorGetV2InventoryDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string steamId, Option<int> maxAgeSeconds, Option<bool> forceRefresh, Option<int> staleIfErrorSeconds)
         {
             bool suppressDefaultLogLocalVar = false;
-            OnErrorGetV2Inventory(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, steamId);
+            OnErrorGetV2Inventory(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, steamId, maxAgeSeconds, forceRefresh, staleIfErrorSeconds);
             if (!suppressDefaultLogLocalVar)
                 Logger.LogError(RestLogEvents.ApiRequestFailed, exceptionLocalVar, "An error occurred while sending the request to the server.");
         }
@@ -7574,19 +8167,25 @@ namespace OpenSkin.Client.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="steamId"></param>
-        partial void OnErrorGetV2Inventory(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string steamId);
+        /// <param name="maxAgeSeconds"></param>
+        /// <param name="forceRefresh"></param>
+        /// <param name="staleIfErrorSeconds"></param>
+        partial void OnErrorGetV2Inventory(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, string steamId, Option<int> maxAgeSeconds, Option<bool> forceRefresh, Option<int> staleIfErrorSeconds);
 
         /// <summary>
-        /// Read a CS2 inventory Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available, including wear, paint seed, applied stickers, charms or keychains with pattern and offsets, StatTrak, and name tag. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
+        /// Read a CS2 inventory Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available. Ordinary reads return the first saved public observation at any age and avoid a Steam request. An explicit max_age_seconds may fetch a newer observation while retaining the saved copy. A successful force_refresh request replaces it; a private response invalidates it. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
         /// </summary>
         /// <param name="steamId"></param>
+        /// <param name="maxAgeSeconds">Maximum observation age before attempting Steam. If omitted, use the saved observation at any age. Cannot accompany force_refresh&#x3D;true. (optional)</param>
+        /// <param name="forceRefresh">Attempt Steam even when a cached observation qualifies; a successful public response replaces the saved durable observation. Default false. (optional)</param>
+        /// <param name="staleIfErrorSeconds">Maximum observation age allowed only after a Steam failure or rate limit; default 1800. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetV2InventoryApiResponse"/>&gt;</returns>
-        public async Task<IGetV2InventoryApiResponse?> GetV2InventoryOrDefaultAsync(string steamId, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetV2InventoryApiResponse?> GetV2InventoryOrDefaultAsync(string steamId, Option<int> maxAgeSeconds = default, Option<bool> forceRefresh = default, Option<int> staleIfErrorSeconds = default, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetV2InventoryAsync(steamId, cancellationToken).ConfigureAwait(false);
+                return await GetV2InventoryAsync(steamId, maxAgeSeconds, forceRefresh, staleIfErrorSeconds, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -7595,13 +8194,16 @@ namespace OpenSkin.Client.Api
         }
 
         /// <summary>
-        /// Read a CS2 inventory Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available, including wear, paint seed, applied stickers, charms or keychains with pattern and offsets, StatTrak, and name tag. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
+        /// Read a CS2 inventory Returns any public Steam inventory with one record per asset and exact Valve-provided item state when available. Ordinary reads return the first saved public observation at any age and avoid a Steam request. An explicit max_age_seconds may fetch a newer observation while retaining the saved copy. A successful force_refresh request replaces it; a private response invalidates it. A Platform API key authenticates the API caller, and a publicly visible Steam inventory is the owner&#39;s sole requirement.
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="steamId"></param>
+        /// <param name="maxAgeSeconds">Maximum observation age before attempting Steam. If omitted, use the saved observation at any age. Cannot accompany force_refresh&#x3D;true. (optional)</param>
+        /// <param name="forceRefresh">Attempt Steam even when a cached observation qualifies; a successful public response replaces the saved durable observation. Default false. (optional)</param>
+        /// <param name="staleIfErrorSeconds">Maximum observation age allowed only after a Steam failure or rate limit; default 1800. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetV2InventoryApiResponse"/>&gt;</returns>
-        public async Task<IGetV2InventoryApiResponse> GetV2InventoryAsync(string steamId, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetV2InventoryApiResponse> GetV2InventoryAsync(string steamId, Option<int> maxAgeSeconds = default, Option<bool> forceRefresh = default, Option<int> staleIfErrorSeconds = default, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
@@ -7609,7 +8211,7 @@ namespace OpenSkin.Client.Api
             {
                 ValidateGetV2Inventory(steamId);
 
-                FormatGetV2Inventory(ref steamId);
+                FormatGetV2Inventory(ref steamId, ref maxAgeSeconds, ref forceRefresh, ref staleIfErrorSeconds);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
                 {
@@ -7620,6 +8222,19 @@ namespace OpenSkin.Client.Api
                         ? "/v2/inventories/{steam_id}"
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/inventories/{steam_id}");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bsteam_id%7D", Uri.EscapeDataString(steamId.ToString()));
+
+                    System.Collections.Specialized.NameValueCollection parseQueryStringLocalVar = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+                    if (maxAgeSeconds.IsSet)
+                        parseQueryStringLocalVar["max_age_seconds"] = ClientUtils.ParameterToString(maxAgeSeconds.Value);
+
+                    if (forceRefresh.IsSet)
+                        parseQueryStringLocalVar["force_refresh"] = ClientUtils.ParameterToString(forceRefresh.Value);
+
+                    if (staleIfErrorSeconds.IsSet)
+                        parseQueryStringLocalVar["stale_if_error_seconds"] = ClientUtils.ParameterToString(staleIfErrorSeconds.Value);
+
+                    uriBuilderLocalVar.Query = parseQueryStringLocalVar.ToString();
 
                     List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
                     ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("X-API-Key", cancellationToken).ConfigureAwait(false);
@@ -7654,7 +8269,7 @@ namespace OpenSkin.Client.Api
                             }
                         }
 
-                        AfterGetV2InventoryDefaultImplementation(apiResponseLocalVar, steamId);
+                        AfterGetV2InventoryDefaultImplementation(apiResponseLocalVar, steamId, maxAgeSeconds, forceRefresh, staleIfErrorSeconds);
 
                         Events.ExecuteOnGetV2Inventory(apiResponseLocalVar);
 
@@ -7668,7 +8283,7 @@ namespace OpenSkin.Client.Api
             }
             catch(Exception e)
             {
-                OnErrorGetV2InventoryDefaultImplementation(e, "/v2/inventories/{steam_id}", uriBuilderLocalVar.Path, steamId);
+                OnErrorGetV2InventoryDefaultImplementation(e, "/v2/inventories/{steam_id}", uriBuilderLocalVar.Path, steamId, maxAgeSeconds, forceRefresh, staleIfErrorSeconds);
                 Events.ExecuteOnErrorGetV2Inventory(e);
                 throw;
             }
@@ -7763,6 +8378,56 @@ namespace OpenSkin.Client.Api
                 } catch (Exception e)
                 {
                     OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)200);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? BadRequest()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnBadRequest(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultBadRequest();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultBadRequest()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsBadRequest
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnBadRequest(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryBadRequest([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = BadRequest();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)400);
                 }
 
                 return result != null;
@@ -7939,7 +8604,7 @@ namespace OpenSkin.Client.Api
         partial void OnErrorGetV2InventoryBatch(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, V2InventoryBatchRequest v2InventoryBatchRequest);
 
         /// <summary>
-        /// Resolve up to 20 CS2 inventories Results preserve input order and report failures per SteamID.
+        /// Resolve up to 20 CS2 inventories Results preserve input order and report failures per SteamID. An optional freshness object applies one policy to the whole batch; omitted fields use scalar defaults.
         /// </summary>
         /// <param name="v2InventoryBatchRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
@@ -7957,7 +8622,7 @@ namespace OpenSkin.Client.Api
         }
 
         /// <summary>
-        /// Resolve up to 20 CS2 inventories Results preserve input order and report failures per SteamID.
+        /// Resolve up to 20 CS2 inventories Results preserve input order and report failures per SteamID. An optional freshness object applies one policy to the whole batch; omitted fields use scalar defaults.
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="v2InventoryBatchRequest"></param>
@@ -8137,6 +8802,56 @@ namespace OpenSkin.Client.Api
                 } catch (Exception e)
                 {
                     OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)200);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? BadRequest()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnBadRequest(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultBadRequest();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultBadRequest()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsBadRequest
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnBadRequest(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryBadRequest([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = BadRequest();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)400);
                 }
 
                 return result != null;

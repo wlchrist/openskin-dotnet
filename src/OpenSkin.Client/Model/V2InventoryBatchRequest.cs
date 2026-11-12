@@ -35,10 +35,14 @@ namespace OpenSkin.Client.Model
         /// Initializes a new instance of the <see cref="V2InventoryBatchRequest" /> class.
         /// </summary>
         /// <param name="steamIds">steamIds</param>
+        /// <param name="proxy">proxy</param>
+        /// <param name="freshness">freshness</param>
         [JsonConstructor]
-        public V2InventoryBatchRequest(List<string> steamIds)
+        public V2InventoryBatchRequest(List<string> steamIds, Option<V2InventoryRequestProxy?> proxy = default, Option<V2InventoryFreshness?> freshness = default)
         {
             SteamIds = steamIds;
+            ProxyOption = proxy;
+            FreshnessOption = freshness;
             OnCreated();
         }
 
@@ -49,6 +53,32 @@ namespace OpenSkin.Client.Model
         /// </summary>
         [JsonPropertyName("steam_ids")]
         public List<string> SteamIds { get; set; }
+
+        /// <summary>
+        /// Used to track the state of Proxy
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<V2InventoryRequestProxy?> ProxyOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets Proxy
+        /// </summary>
+        [JsonPropertyName("proxy")]
+        public V2InventoryRequestProxy? Proxy { get { return this.ProxyOption.Value; } set { this.ProxyOption = new(value); } }
+
+        /// <summary>
+        /// Used to track the state of Freshness
+        /// </summary>
+        [JsonIgnore]
+        [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+        public Option<V2InventoryFreshness?> FreshnessOption { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets Freshness
+        /// </summary>
+        [JsonPropertyName("freshness")]
+        public V2InventoryFreshness? Freshness { get { return this.FreshnessOption.Value; } set { this.FreshnessOption = new(value); } }
 
         /// <summary>
         /// Gets or Sets additional properties
@@ -65,6 +95,8 @@ namespace OpenSkin.Client.Model
             StringBuilder sb = new StringBuilder();
             sb.Append("class V2InventoryBatchRequest {\n");
             sb.Append("  SteamIds: ").Append(SteamIds).Append("\n");
+            sb.Append("  Proxy: ").Append(Proxy).Append("\n");
+            sb.Append("  Freshness: ").Append(Freshness).Append("\n");
             sb.Append("  AdditionalProperties: ").Append(AdditionalProperties).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -114,6 +146,8 @@ namespace OpenSkin.Client.Model
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
             Option<List<string>?> steamIds = default;
+            Option<V2InventoryRequestProxy?> proxy = default;
+            Option<V2InventoryFreshness?> freshness = default;
 
             while (utf8JsonReader.Read())
             {
@@ -133,6 +167,12 @@ namespace OpenSkin.Client.Model
                         case "steam_ids":
                             steamIds = new Option<List<string>?>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
+                        case "proxy":
+                            proxy = new Option<V2InventoryRequestProxy?>(JsonSerializer.Deserialize<V2InventoryRequestProxy>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            break;
+                        case "freshness":
+                            freshness = new Option<V2InventoryFreshness?>(JsonSerializer.Deserialize<V2InventoryFreshness>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            break;
                         default:
                             break;
                     }
@@ -145,7 +185,13 @@ namespace OpenSkin.Client.Model
             if (steamIds.IsSet && steamIds.Value == null)
                 throw new ArgumentNullException(nameof(steamIds), "Property is not nullable for class V2InventoryBatchRequest.");
 
-            return new V2InventoryBatchRequest(steamIds.Value!);
+            if (proxy.IsSet && proxy.Value == null)
+                throw new ArgumentNullException(nameof(proxy), "Property is not nullable for class V2InventoryBatchRequest.");
+
+            if (freshness.IsSet && freshness.Value == null)
+                throw new ArgumentNullException(nameof(freshness), "Property is not nullable for class V2InventoryBatchRequest.");
+
+            return new V2InventoryBatchRequest(steamIds.Value!, proxy, freshness);
         }
 
         /// <summary>
@@ -175,8 +221,24 @@ namespace OpenSkin.Client.Model
             if (v2InventoryBatchRequest.SteamIds == null)
                 throw new ArgumentNullException(nameof(v2InventoryBatchRequest.SteamIds), "Property is required for class V2InventoryBatchRequest.");
 
+            if (v2InventoryBatchRequest.ProxyOption.IsSet && v2InventoryBatchRequest.Proxy == null)
+                throw new ArgumentNullException(nameof(v2InventoryBatchRequest.Proxy), "Property is required for class V2InventoryBatchRequest.");
+
+            if (v2InventoryBatchRequest.FreshnessOption.IsSet && v2InventoryBatchRequest.Freshness == null)
+                throw new ArgumentNullException(nameof(v2InventoryBatchRequest.Freshness), "Property is required for class V2InventoryBatchRequest.");
+
             writer.WritePropertyName("steam_ids");
             JsonSerializer.Serialize(writer, v2InventoryBatchRequest.SteamIds, jsonSerializerOptions);
+            if (v2InventoryBatchRequest.ProxyOption.IsSet)
+            {
+                writer.WritePropertyName("proxy");
+                JsonSerializer.Serialize(writer, v2InventoryBatchRequest.Proxy, jsonSerializerOptions);
+            }
+            if (v2InventoryBatchRequest.FreshnessOption.IsSet)
+            {
+                writer.WritePropertyName("freshness");
+                JsonSerializer.Serialize(writer, v2InventoryBatchRequest.Freshness, jsonSerializerOptions);
+            }
         }
     }
 }

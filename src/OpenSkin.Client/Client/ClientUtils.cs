@@ -235,6 +235,8 @@ namespace OpenSkin.Client.Client
                 return V2InstancePublication.StateEnumToJsonValue(v2InstancePublicationStateEnum);
             if (obj is V2InventoryHistoryEntry.SourceEnum v2InventoryHistoryEntrySourceEnum)
                 return V2InventoryHistoryEntry.SourceEnumToJsonValue(v2InventoryHistoryEntrySourceEnum);
+            if (obj is V2InventoryRequestProxy.SchemeEnum v2InventoryRequestProxySchemeEnum)
+                return V2InventoryRequestProxy.SchemeEnumToJsonValue(v2InventoryRequestProxySchemeEnum);
             if (obj is V2InventorySnapshot.AppIdEnum v2InventorySnapshotAppIdEnum)
                 return V2InventorySnapshot.AppIdEnumToJsonValue(v2InventorySnapshotAppIdEnum).ToString();
             if (obj is V2InventorySnapshot.ContextIdEnum v2InventorySnapshotContextIdEnum)
@@ -389,6 +391,8 @@ namespace OpenSkin.Client.Client
                 return V2SteamIdentityResolution.KindEnumToJsonValue(v2SteamIdentityResolutionKindEnum);
             if (obj is V2SteamIdentityResolution.SourceEnum v2SteamIdentityResolutionSourceEnum)
                 return V2SteamIdentityResolution.SourceEnumToJsonValue(v2SteamIdentityResolutionSourceEnum);
+            if (obj is V2SteamPartnerInventoryObservation.CoverageEnum v2SteamPartnerInventoryObservationCoverageEnum)
+                return V2SteamPartnerInventoryObservation.CoverageEnumToJsonValue(v2SteamPartnerInventoryObservationCoverageEnum);
             if (obj is V2SteamTradeEligibility.StatusEnum v2SteamTradeEligibilityStatusEnum)
                 return V2SteamTradeEligibility.StatusEnumToJsonValue(v2SteamTradeEligibilityStatusEnum);
             if (obj is V2TradeAuthorizationReceipt.SchemaVersionEnum v2TradeAuthorizationReceiptSchemaVersionEnum)

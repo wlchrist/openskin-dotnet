@@ -296,6 +296,33 @@ namespace OpenSkin.Client.Api
         Task<IExecuteV2TradeIntentApiResponse?> ExecuteV2TradeIntentOrDefaultAsync(Guid intentId, string idempotencyKey, V2ExecuteTradeIntentRequest v2ExecuteTradeIntentRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Fetch a Steam partner trade inventory
+        /// </summary>
+        /// <remarks>
+        /// Queues a private read of the trade-eligible CS2 assets Steam exposes to one connected viewer account. The optional partner token and proxy credentials are encrypted immediately. A supplied proxy handles every page and retry; the request fails rather than switching to another egress path. The result represents trade-eligible coverage; trade creation and complete owner coverage remain separate operations.
+        /// </remarks>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2SteamPartnerInventoryApiResponse"/>&gt;</returns>
+        Task<IFetchV2SteamPartnerInventoryApiResponse> FetchV2SteamPartnerInventoryAsync(long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Fetch a Steam partner trade inventory
+        /// </summary>
+        /// <remarks>
+        /// Queues a private read of the trade-eligible CS2 assets Steam exposes to one connected viewer account. The optional partner token and proxy credentials are encrypted immediately. A supplied proxy handles every page and retry; the request fails rather than switching to another egress path. The result represents trade-eligible coverage; trade creation and complete owner coverage remain separate operations.
+        /// </remarks>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2SteamPartnerInventoryApiResponse"/>?&gt;</returns>
+        Task<IFetchV2SteamPartnerInventoryApiResponse?> FetchV2SteamPartnerInventoryOrDefaultAsync(long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Fetch the connected account&#39;s inbound trade-offer link
         /// </summary>
         /// <remarks>
@@ -446,6 +473,31 @@ namespace OpenSkin.Client.Api
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetV2SteamCommandApiResponse"/>?&gt;</returns>
         Task<IGetV2SteamCommandApiResponse?> GetV2SteamCommandOrDefaultAsync(Guid commandId, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Read an authenticated Steam partner inventory
+        /// </summary>
+        /// <remarks>
+        /// Returns the tenant-private trade-eligible observation produced by one completed partner-inventory command. Public inventory caching remains isolated to public observations.
+        /// </remarks>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetV2SteamPartnerInventoryApiResponse"/>&gt;</returns>
+        Task<IGetV2SteamPartnerInventoryApiResponse> GetV2SteamPartnerInventoryAsync(long accountId, Guid commandId, System.Threading.CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Read an authenticated Steam partner inventory
+        /// </summary>
+        /// <remarks>
+        /// Returns the tenant-private trade-eligible observation produced by one completed partner-inventory command. Public inventory caching remains isolated to public observations.
+        /// </remarks>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetV2SteamPartnerInventoryApiResponse"/>?&gt;</returns>
+        Task<IGetV2SteamPartnerInventoryApiResponse?> GetV2SteamPartnerInventoryOrDefaultAsync(long accountId, Guid commandId, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Read the account trade policy
@@ -1415,6 +1467,54 @@ namespace OpenSkin.Client.Api
     }
 
     /// <summary>
+    /// The <see cref="IFetchV2SteamPartnerInventoryApiResponse"/>
+    /// </summary>
+    public interface IFetchV2SteamPartnerInventoryApiResponse : OpenSkin.Client.Client.IApiResponse, IAccepted<OpenSkin.Client.Model.V2CommandReceipt?>, IBadRequest<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>, INotFound<OpenSkin.Client.Model.V2PlatformErrorResponse?>, ITooManyRequests<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IServiceUnavailable<OpenSkin.Client.Model.V2PlatformErrorResponse?>
+    {
+        /// <summary>
+        /// Returns true if the response is 202 Accepted
+        /// </summary>
+        /// <returns></returns>
+        bool IsAccepted { get; }
+
+        /// <summary>
+        /// Returns true if the response is 400 BadRequest
+        /// </summary>
+        /// <returns></returns>
+        bool IsBadRequest { get; }
+
+        /// <summary>
+        /// Returns true if the response is 401 Unauthorized
+        /// </summary>
+        /// <returns></returns>
+        bool IsUnauthorized { get; }
+
+        /// <summary>
+        /// Returns true if the response is 403 Forbidden
+        /// </summary>
+        /// <returns></returns>
+        bool IsForbidden { get; }
+
+        /// <summary>
+        /// Returns true if the response is 404 NotFound
+        /// </summary>
+        /// <returns></returns>
+        bool IsNotFound { get; }
+
+        /// <summary>
+        /// Returns true if the response is 429 TooManyRequests
+        /// </summary>
+        /// <returns></returns>
+        bool IsTooManyRequests { get; }
+
+        /// <summary>
+        /// Returns true if the response is 503 ServiceUnavailable
+        /// </summary>
+        /// <returns></returns>
+        bool IsServiceUnavailable { get; }
+    }
+
+    /// <summary>
     /// The <see cref="IFetchV2SteamTradeLinkApiResponse"/>
     /// </summary>
     public interface IFetchV2SteamTradeLinkApiResponse : OpenSkin.Client.Client.IApiResponse, IAccepted<OpenSkin.Client.Model.V2CommandReceipt?>, IBadRequest<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>, INotFound<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IServiceUnavailable<OpenSkin.Client.Model.V2PlatformErrorResponse?>
@@ -1616,6 +1716,42 @@ namespace OpenSkin.Client.Api
         /// </summary>
         /// <returns></returns>
         bool IsNotFound { get; }
+    }
+
+    /// <summary>
+    /// The <see cref="IGetV2SteamPartnerInventoryApiResponse"/>
+    /// </summary>
+    public interface IGetV2SteamPartnerInventoryApiResponse : OpenSkin.Client.Client.IApiResponse, IOk<OpenSkin.Client.Model.V2GetSteamPartnerInventoryResponse?>, IUnauthorized<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IForbidden<OpenSkin.Client.Model.V2PlatformErrorResponse?>, INotFound<OpenSkin.Client.Model.V2PlatformErrorResponse?>, IServiceUnavailable<OpenSkin.Client.Model.V2PlatformErrorResponse?>
+    {
+        /// <summary>
+        /// Returns true if the response is 200 Ok
+        /// </summary>
+        /// <returns></returns>
+        bool IsOk { get; }
+
+        /// <summary>
+        /// Returns true if the response is 401 Unauthorized
+        /// </summary>
+        /// <returns></returns>
+        bool IsUnauthorized { get; }
+
+        /// <summary>
+        /// Returns true if the response is 403 Forbidden
+        /// </summary>
+        /// <returns></returns>
+        bool IsForbidden { get; }
+
+        /// <summary>
+        /// Returns true if the response is 404 NotFound
+        /// </summary>
+        /// <returns></returns>
+        bool IsNotFound { get; }
+
+        /// <summary>
+        /// Returns true if the response is 503 ServiceUnavailable
+        /// </summary>
+        /// <returns></returns>
+        bool IsServiceUnavailable { get; }
     }
 
     /// <summary>
@@ -2624,6 +2760,26 @@ namespace OpenSkin.Client.Api
         /// <summary>
         /// The event raised after the server response
         /// </summary>
+        public event EventHandler<ApiResponseEventArgs>? OnFetchV2SteamPartnerInventory;
+
+        /// <summary>
+        /// The event raised after an error querying the server
+        /// </summary>
+        public event EventHandler<ExceptionEventArgs>? OnErrorFetchV2SteamPartnerInventory;
+
+        internal void ExecuteOnFetchV2SteamPartnerInventory(PlatformV2AutomationApi.FetchV2SteamPartnerInventoryApiResponse apiResponse)
+        {
+            OnFetchV2SteamPartnerInventory?.Invoke(this, new ApiResponseEventArgs(apiResponse));
+        }
+
+        internal void ExecuteOnErrorFetchV2SteamPartnerInventory(Exception exception)
+        {
+            OnErrorFetchV2SteamPartnerInventory?.Invoke(this, new ExceptionEventArgs(exception));
+        }
+
+        /// <summary>
+        /// The event raised after the server response
+        /// </summary>
         public event EventHandler<ApiResponseEventArgs>? OnFetchV2SteamTradeLink;
 
         /// <summary>
@@ -2739,6 +2895,26 @@ namespace OpenSkin.Client.Api
         internal void ExecuteOnErrorGetV2SteamCommand(Exception exception)
         {
             OnErrorGetV2SteamCommand?.Invoke(this, new ExceptionEventArgs(exception));
+        }
+
+        /// <summary>
+        /// The event raised after the server response
+        /// </summary>
+        public event EventHandler<ApiResponseEventArgs>? OnGetV2SteamPartnerInventory;
+
+        /// <summary>
+        /// The event raised after an error querying the server
+        /// </summary>
+        public event EventHandler<ExceptionEventArgs>? OnErrorGetV2SteamPartnerInventory;
+
+        internal void ExecuteOnGetV2SteamPartnerInventory(PlatformV2AutomationApi.GetV2SteamPartnerInventoryApiResponse apiResponse)
+        {
+            OnGetV2SteamPartnerInventory?.Invoke(this, new ApiResponseEventArgs(apiResponse));
+        }
+
+        internal void ExecuteOnErrorGetV2SteamPartnerInventory(Exception exception)
+        {
+            OnErrorGetV2SteamPartnerInventory?.Invoke(this, new ExceptionEventArgs(exception));
         }
 
         /// <summary>
@@ -3373,7 +3549,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/trades/{trade_id}/cancel");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Btrade_id%7D", Uri.EscapeDataString(tradeId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -3801,7 +3977,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/trade-intents/{intent_id}/cancel");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bintent_id%7D", Uri.EscapeDataString(intentId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -4293,7 +4469,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2SteamTradeHoldRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -4851,7 +5027,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2AuthenticatorRecoveryCompleteRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -5769,7 +5945,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2CreateTradeIntentRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -6256,7 +6432,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/trades/{trade_id}/decline");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Btrade_id%7D", Uri.EscapeDataString(tradeId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -6684,7 +6860,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/disconnect");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -7062,7 +7238,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/authenticator/enroll");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -7504,7 +7680,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2ExecuteTradeIntentRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -7931,6 +8107,607 @@ namespace OpenSkin.Client.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
+        partial void FormatFetchV2SteamPartnerInventory(ref long accountId, ref string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        /// <returns></returns>
+        private void ValidateFetchV2SteamPartnerInventory(string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest)
+        {
+            if (idempotencyKey == null)
+                throw new ArgumentNullException(nameof(idempotencyKey));
+
+            if (v2SteamPartnerInventoryRequest == null)
+                throw new ArgumentNullException(nameof(v2SteamPartnerInventoryRequest));
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        private void AfterFetchV2SteamPartnerInventoryDefaultImplementation(IFetchV2SteamPartnerInventoryApiResponse apiResponseLocalVar, long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest)
+        {
+            bool suppressDefaultLog = false;
+            AfterFetchV2SteamPartnerInventory(ref suppressDefaultLog, apiResponseLocalVar, accountId, idempotencyKey, v2SteamPartnerInventoryRequest);
+            if (!suppressDefaultLog)
+                Logger.LogInformation(RestLogEvents.ApiRequestCompleted, "{0,-9} | {1} | {2}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="suppressDefaultLog"></param>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        partial void AfterFetchV2SteamPartnerInventory(ref bool suppressDefaultLog, IFetchV2SteamPartnerInventoryApiResponse apiResponseLocalVar, long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest);
+
+        /// <summary>
+        /// Logs exceptions that occur while retrieving the server response
+        /// </summary>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        private void OnErrorFetchV2SteamPartnerInventoryDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest)
+        {
+            bool suppressDefaultLogLocalVar = false;
+            OnErrorFetchV2SteamPartnerInventory(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, accountId, idempotencyKey, v2SteamPartnerInventoryRequest);
+            if (!suppressDefaultLogLocalVar)
+                Logger.LogError(RestLogEvents.ApiRequestFailed, exceptionLocalVar, "An error occurred while sending the request to the server.");
+        }
+
+        /// <summary>
+        /// A partial method that gives developers a way to provide customized exception handling
+        /// </summary>
+        /// <param name="suppressDefaultLogLocalVar"></param>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        partial void OnErrorFetchV2SteamPartnerInventory(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest);
+
+        /// <summary>
+        /// Fetch a Steam partner trade inventory Queues a private read of the trade-eligible CS2 assets Steam exposes to one connected viewer account. The optional partner token and proxy credentials are encrypted immediately. A supplied proxy handles every page and retry; the request fails rather than switching to another egress path. The result represents trade-eligible coverage; trade creation and complete owner coverage remain separate operations.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2SteamPartnerInventoryApiResponse"/>&gt;</returns>
+        public async Task<IFetchV2SteamPartnerInventoryApiResponse?> FetchV2SteamPartnerInventoryOrDefaultAsync(long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await FetchV2SteamPartnerInventoryAsync(accountId, idempotencyKey, v2SteamPartnerInventoryRequest, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fetch a Steam partner trade inventory Queues a private read of the trade-eligible CS2 assets Steam exposes to one connected viewer account. The optional partner token and proxy credentials are encrypted immediately. A supplied proxy handles every page and retry; the request fails rather than switching to another egress path. The result represents trade-eligible coverage; trade creation and complete owner coverage remain separate operations.
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="accountId"></param>
+        /// <param name="idempotencyKey"></param>
+        /// <param name="v2SteamPartnerInventoryRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IFetchV2SteamPartnerInventoryApiResponse"/>&gt;</returns>
+        public async Task<IFetchV2SteamPartnerInventoryApiResponse> FetchV2SteamPartnerInventoryAsync(long accountId, string idempotencyKey, V2SteamPartnerInventoryRequest v2SteamPartnerInventoryRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            UriBuilder uriBuilderLocalVar = new UriBuilder();
+
+            try
+            {
+                ValidateFetchV2SteamPartnerInventory(idempotencyKey, v2SteamPartnerInventoryRequest);
+
+                FormatFetchV2SteamPartnerInventory(ref accountId, ref idempotencyKey, v2SteamPartnerInventoryRequest);
+
+                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
+                {
+                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
+                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
+                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
+                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
+                        ? "/v2/steam/accounts/{account_id}/partner-inventory/fetch"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/partner-inventory/fetch");
+                    uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
+
+                    httpRequestMessageLocalVar.Content = (v2SteamPartnerInventoryRequest as object) is OpenSkin.Client.Client.FileParameter fileParameterLocalVar
+                        ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2SteamPartnerInventoryRequest, _jsonSerializerOptions));
+
+                    // Set client side default value of Header Param "Idempotency-Key".
+                    if (ClientUtils.IsContentHeader("Idempotency-Key"))
+                    {
+                        httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
+                    }
+                    else
+                    {
+                        httpRequestMessageLocalVar.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
+                    }
+
+                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
+                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("X-API-Key", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
+                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
+
+                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
+
+                    string[] contentTypes = new string[] {
+                        "application/json"
+                    };
+
+                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
+
+                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
+                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
+
+                    string[] acceptLocalVars = new string[] {
+                        "application/json"
+                    };
+
+                    IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaderValuesLocalVar = ClientUtils.SelectHeaderAcceptArray(acceptLocalVars);
+
+                    foreach (var acceptLocalVar in acceptHeaderValuesLocalVar)
+                        httpRequestMessageLocalVar.Headers.Accept.Add(acceptLocalVar);
+
+                    httpRequestMessageLocalVar.Method = HttpMethod.Post;
+
+                    DateTime requestedAtLocalVar = DateTime.UtcNow;
+
+                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
+                    {
+                        FetchV2SteamPartnerInventoryApiResponse apiResponseLocalVar;
+
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(Logger, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/v2/steam/accounts/{account_id}/partner-inventory/fetch", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
+
+                        AfterFetchV2SteamPartnerInventoryDefaultImplementation(apiResponseLocalVar, accountId, idempotencyKey, v2SteamPartnerInventoryRequest);
+
+                        Events.ExecuteOnFetchV2SteamPartnerInventory(apiResponseLocalVar);
+
+                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
+                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
+                                tokenBaseLocalVar.BeginRateLimit();
+
+                        return apiResponseLocalVar;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                OnErrorFetchV2SteamPartnerInventoryDefaultImplementation(e, "/v2/steam/accounts/{account_id}/partner-inventory/fetch", uriBuilderLocalVar.Path, accountId, idempotencyKey, v2SteamPartnerInventoryRequest);
+                Events.ExecuteOnErrorFetchV2SteamPartnerInventory(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="FetchV2SteamPartnerInventoryApiResponse"/>
+        /// </summary>
+        public partial class FetchV2SteamPartnerInventoryApiResponse : OpenSkin.Client.Client.ApiResponse, IFetchV2SteamPartnerInventoryApiResponse
+        {
+            /// <summary>
+            /// The logger
+            /// </summary>
+            public ILogger<PlatformV2AutomationApi> Logger { get; }
+
+            /// <summary>
+            /// The <see cref="FetchV2SteamPartnerInventoryApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="rawContent"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public FetchV2SteamPartnerInventoryApiResponse(ILogger<PlatformV2AutomationApi> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="FetchV2SteamPartnerInventoryApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public FetchV2SteamPartnerInventoryApiResponse(ILogger<PlatformV2AutomationApi> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
+
+            /// <summary>
+            /// Returns true if the response is 202 Accepted
+            /// </summary>
+            /// <returns></returns>
+            public bool IsAccepted => 202 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 202 Accepted
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2CommandReceipt? Accepted()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2CommandReceipt? result = null;
+                OnAccepted(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultAccepted();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2CommandReceipt? DefaultAccepted()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsAccepted
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2CommandReceipt>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnAccepted(ref bool suppressDefault, ref OpenSkin.Client.Model.V2CommandReceipt? result);
+
+            /// <summary>
+            /// Returns true if the response is 202 Accepted and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryAccepted([NotNullWhen(true)]out OpenSkin.Client.Model.V2CommandReceipt? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Accepted();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)202);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? BadRequest()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnBadRequest(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultBadRequest();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultBadRequest()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsBadRequest
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnBadRequest(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryBadRequest([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = BadRequest();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)400);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public bool IsUnauthorized => 401 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? Unauthorized()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnUnauthorized(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultUnauthorized();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultUnauthorized()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsUnauthorized
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnUnauthorized(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryUnauthorized([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Unauthorized();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)401);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public bool IsForbidden => 403 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? Forbidden()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnForbidden(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultForbidden();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultForbidden()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsForbidden
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnForbidden(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryForbidden([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Forbidden();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)403);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 404 NotFound
+            /// </summary>
+            /// <returns></returns>
+            public bool IsNotFound => 404 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 404 NotFound
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? NotFound()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnNotFound(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultNotFound();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultNotFound()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsNotFound
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnNotFound(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 404 NotFound and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryNotFound([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = NotFound();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)404);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 429 TooManyRequests
+            /// </summary>
+            /// <returns></returns>
+            public bool IsTooManyRequests => 429 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 429 TooManyRequests
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? TooManyRequests()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnTooManyRequests(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultTooManyRequests();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultTooManyRequests()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsTooManyRequests
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnTooManyRequests(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 429 TooManyRequests and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryTooManyRequests([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = TooManyRequests();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)429);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 503 ServiceUnavailable
+            /// </summary>
+            /// <returns></returns>
+            public bool IsServiceUnavailable => 503 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 503 ServiceUnavailable
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? ServiceUnavailable()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnServiceUnavailable(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultServiceUnavailable();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultServiceUnavailable()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsServiceUnavailable
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnServiceUnavailable(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 503 ServiceUnavailable and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryServiceUnavailable([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = ServiceUnavailable();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)503);
+                }
+
+                return result != null;
+            }
+
+            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
+            {
+                bool suppressDefaultLog = false;
+                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
+                if (!suppressDefaultLog)
+                    Logger.LogError(RestLogEvents.ApiDeserializationFailed, exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
+            }
+
+            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
+        }
+
         partial void FormatFetchV2SteamTradeLink(ref long accountId, ref string idempotencyKey, V2EncryptedDeliveryRequest v2EncryptedDeliveryRequest);
 
         /// <summary>
@@ -8055,7 +8832,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2EncryptedDeliveryRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -8613,7 +9390,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2AuthenticatorFinalizeRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -9114,7 +9891,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2EncryptedDeliveryRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -10688,6 +11465,462 @@ namespace OpenSkin.Client.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
+        partial void FormatGetV2SteamPartnerInventory(ref long accountId, ref Guid commandId);
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        private void AfterGetV2SteamPartnerInventoryDefaultImplementation(IGetV2SteamPartnerInventoryApiResponse apiResponseLocalVar, long accountId, Guid commandId)
+        {
+            bool suppressDefaultLog = false;
+            AfterGetV2SteamPartnerInventory(ref suppressDefaultLog, apiResponseLocalVar, accountId, commandId);
+            if (!suppressDefaultLog)
+                Logger.LogInformation(RestLogEvents.ApiRequestCompleted, "{0,-9} | {1} | {2}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="suppressDefaultLog"></param>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        partial void AfterGetV2SteamPartnerInventory(ref bool suppressDefaultLog, IGetV2SteamPartnerInventoryApiResponse apiResponseLocalVar, long accountId, Guid commandId);
+
+        /// <summary>
+        /// Logs exceptions that occur while retrieving the server response
+        /// </summary>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        private void OnErrorGetV2SteamPartnerInventoryDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, long accountId, Guid commandId)
+        {
+            bool suppressDefaultLogLocalVar = false;
+            OnErrorGetV2SteamPartnerInventory(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, accountId, commandId);
+            if (!suppressDefaultLogLocalVar)
+                Logger.LogError(RestLogEvents.ApiRequestFailed, exceptionLocalVar, "An error occurred while sending the request to the server.");
+        }
+
+        /// <summary>
+        /// A partial method that gives developers a way to provide customized exception handling
+        /// </summary>
+        /// <param name="suppressDefaultLogLocalVar"></param>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        partial void OnErrorGetV2SteamPartnerInventory(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, long accountId, Guid commandId);
+
+        /// <summary>
+        /// Read an authenticated Steam partner inventory Returns the tenant-private trade-eligible observation produced by one completed partner-inventory command. Public inventory caching remains isolated to public observations.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetV2SteamPartnerInventoryApiResponse"/>&gt;</returns>
+        public async Task<IGetV2SteamPartnerInventoryApiResponse?> GetV2SteamPartnerInventoryOrDefaultAsync(long accountId, Guid commandId, System.Threading.CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetV2SteamPartnerInventoryAsync(accountId, commandId, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Read an authenticated Steam partner inventory Returns the tenant-private trade-eligible observation produced by one completed partner-inventory command. Public inventory caching remains isolated to public observations.
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="accountId"></param>
+        /// <param name="commandId"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IGetV2SteamPartnerInventoryApiResponse"/>&gt;</returns>
+        public async Task<IGetV2SteamPartnerInventoryApiResponse> GetV2SteamPartnerInventoryAsync(long accountId, Guid commandId, System.Threading.CancellationToken cancellationToken = default)
+        {
+            UriBuilder uriBuilderLocalVar = new UriBuilder();
+
+            try
+            {
+                FormatGetV2SteamPartnerInventory(ref accountId, ref commandId);
+
+                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
+                {
+                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
+                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
+                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
+                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
+                        ? "/v2/steam/accounts/{account_id}/partner-inventory/{command_id}"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/partner-inventory/{command_id}");
+                    uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
+                    uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Bcommand_id%7D", Uri.EscapeDataString(commandId.ToString()));
+
+                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
+                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("X-API-Key", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
+                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
+
+                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
+
+                    string[] acceptLocalVars = new string[] {
+                        "application/json"
+                    };
+
+                    IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaderValuesLocalVar = ClientUtils.SelectHeaderAcceptArray(acceptLocalVars);
+
+                    foreach (var acceptLocalVar in acceptHeaderValuesLocalVar)
+                        httpRequestMessageLocalVar.Headers.Accept.Add(acceptLocalVar);
+
+                    httpRequestMessageLocalVar.Method = HttpMethod.Get;
+
+                    DateTime requestedAtLocalVar = DateTime.UtcNow;
+
+                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
+                    {
+                        GetV2SteamPartnerInventoryApiResponse apiResponseLocalVar;
+
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(Logger, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/v2/steam/accounts/{account_id}/partner-inventory/{command_id}", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
+
+                        AfterGetV2SteamPartnerInventoryDefaultImplementation(apiResponseLocalVar, accountId, commandId);
+
+                        Events.ExecuteOnGetV2SteamPartnerInventory(apiResponseLocalVar);
+
+                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
+                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
+                                tokenBaseLocalVar.BeginRateLimit();
+
+                        return apiResponseLocalVar;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                OnErrorGetV2SteamPartnerInventoryDefaultImplementation(e, "/v2/steam/accounts/{account_id}/partner-inventory/{command_id}", uriBuilderLocalVar.Path, accountId, commandId);
+                Events.ExecuteOnErrorGetV2SteamPartnerInventory(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="GetV2SteamPartnerInventoryApiResponse"/>
+        /// </summary>
+        public partial class GetV2SteamPartnerInventoryApiResponse : OpenSkin.Client.Client.ApiResponse, IGetV2SteamPartnerInventoryApiResponse
+        {
+            /// <summary>
+            /// The logger
+            /// </summary>
+            public ILogger<PlatformV2AutomationApi> Logger { get; }
+
+            /// <summary>
+            /// The <see cref="GetV2SteamPartnerInventoryApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="rawContent"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetV2SteamPartnerInventoryApiResponse(ILogger<PlatformV2AutomationApi> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetV2SteamPartnerInventoryApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetV2SteamPartnerInventoryApiResponse(ILogger<PlatformV2AutomationApi> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public bool IsOk => 200 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2GetSteamPartnerInventoryResponse? Ok()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2GetSteamPartnerInventoryResponse? result = null;
+                OnOk(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultOk();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2GetSteamPartnerInventoryResponse? DefaultOk()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsOk
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2GetSteamPartnerInventoryResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnOk(ref bool suppressDefault, ref OpenSkin.Client.Model.V2GetSteamPartnerInventoryResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryOk([NotNullWhen(true)]out OpenSkin.Client.Model.V2GetSteamPartnerInventoryResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Ok();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)200);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public bool IsUnauthorized => 401 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? Unauthorized()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnUnauthorized(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultUnauthorized();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultUnauthorized()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsUnauthorized
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnUnauthorized(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryUnauthorized([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Unauthorized();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)401);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public bool IsForbidden => 403 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? Forbidden()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnForbidden(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultForbidden();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultForbidden()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsForbidden
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnForbidden(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryForbidden([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = Forbidden();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)403);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 404 NotFound
+            /// </summary>
+            /// <returns></returns>
+            public bool IsNotFound => 404 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 404 NotFound
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? NotFound()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnNotFound(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultNotFound();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultNotFound()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsNotFound
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnNotFound(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 404 NotFound and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryNotFound([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = NotFound();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)404);
+                }
+
+                return result != null;
+            }
+
+            /// <summary>
+            /// Returns true if the response is 503 ServiceUnavailable
+            /// </summary>
+            /// <returns></returns>
+            public bool IsServiceUnavailable => 503 == (int)StatusCode;
+
+            /// <summary>
+            /// Deserializes the response if the response is 503 ServiceUnavailable
+            /// </summary>
+            /// <returns></returns>
+            public OpenSkin.Client.Model.V2PlatformErrorResponse? ServiceUnavailable()
+            {
+                bool suppressDefault = false;
+                OpenSkin.Client.Model.V2PlatformErrorResponse? result = null;
+                OnServiceUnavailable(ref suppressDefault, ref result);
+                if (!suppressDefault)
+                    result = DefaultServiceUnavailable();
+                return result;
+            }
+
+            private OpenSkin.Client.Model.V2PlatformErrorResponse? DefaultServiceUnavailable()
+            {
+                // NOTICE: Consider this AsModel template deprecated. Implement the appropriate partial method instead
+                return IsServiceUnavailable
+                    ? System.Text.Json.JsonSerializer.Deserialize<OpenSkin.Client.Model.V2PlatformErrorResponse>(RawContent, _jsonSerializerOptions)
+                    : null;
+            }
+
+            partial void OnServiceUnavailable(ref bool suppressDefault, ref OpenSkin.Client.Model.V2PlatformErrorResponse? result);
+
+            /// <summary>
+            /// Returns true if the response is 503 ServiceUnavailable and the deserialized response is not null
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public bool TryServiceUnavailable([NotNullWhen(true)]out OpenSkin.Client.Model.V2PlatformErrorResponse? result)
+            {
+                result = null;
+
+                try
+                {
+                    result = ServiceUnavailable();
+                } catch (Exception e)
+                {
+                    OnDeserializationErrorDefaultImplementation(e, (HttpStatusCode)503);
+                }
+
+                return result != null;
+            }
+
+            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
+            {
+                bool suppressDefaultLog = false;
+                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
+                if (!suppressDefaultLog)
+                    Logger.LogError(RestLogEvents.ApiDeserializationFailed, exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
+            }
+
+            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
+        }
+
         partial void FormatGetV2SteamTradePolicy(ref long accountId);
 
         /// <summary>
@@ -12009,7 +13242,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2AuthenticatorImport, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -12560,7 +13793,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2SteamWebAPIKeyRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -14481,7 +15714,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/guard/confirmations");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -15832,7 +17065,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2SteamLoginRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -16793,7 +18026,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/trades/{trade_id}/reconcile");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Btrade_id%7D", Uri.EscapeDataString(tradeId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -17221,7 +18454,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/refresh-session");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -17666,7 +18899,7 @@ namespace OpenSkin.Client.Api
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2AuthenticatorRemoveRequest.Value, _jsonSerializerOptions));
                     }
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -18128,7 +19361,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2ConfirmationResolveRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -18629,7 +19862,7 @@ namespace OpenSkin.Client.Api
                         ? httpRequestMessageLocalVar.Content = new StreamContent(fileParameterLocalVar.Content)
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2ConfirmationBatchResolveRequest, _jsonSerializerOptions));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -19116,7 +20349,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/authenticator/recovery");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -19544,7 +20777,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/inventory/sync");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -20039,7 +21272,7 @@ namespace OpenSkin.Client.Api
                         : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(v2SteamTradeHistorySyncRequest.Value, _jsonSerializerOptions));
                     }
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));
@@ -20526,7 +21759,7 @@ namespace OpenSkin.Client.Api
                         : string.Concat(HttpClient.BaseAddress.AbsolutePath.TrimEnd('/'), "/v2/steam/accounts/{account_id}/trades/sync");
                     uriBuilderLocalVar.Path = uriBuilderLocalVar.Path.Replace("%7Baccount_id%7D", Uri.EscapeDataString(accountId.ToString()));
 
-                    // Set client side default value of Header Param "Idempotency-Key".                    
+                    // Set client side default value of Header Param "Idempotency-Key".
                     if (ClientUtils.IsContentHeader("Idempotency-Key"))
                     {
                         httpRequestMessageLocalVar.Content?.Headers.Add("Idempotency-Key", ClientUtils.ParameterToString(idempotencyKey));

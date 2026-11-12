@@ -5,7 +5,7 @@
 ## Install
 
 ```sh
-dotnet add package OpenSkin.Client --version 0.1.0
+dotnet add package OpenSkin.Client --version 0.2.0
 ```
 
 ## Example
